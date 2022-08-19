@@ -9,8 +9,6 @@ class Product extends Model {}
 // set up fields and rules for Product model
 Product.init(
   {
-    // define columns: id, product_name (string, not null), price(decimal, not null, validate decimal value)
-    // stock (int, not null, default value of 10, validates numeric value), category_id (int, references category model id)
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
