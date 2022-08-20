@@ -12,10 +12,10 @@ router.get('/', (req, res) => {
       model: Category,
       attributes: ['category_name']
       },
-    // {
-    //   model: Tag,
-    //   attributes: ['tag_name']
-    // }
+    {
+      model: Tag,
+      attributes: ['tag_name']
+    }
     ]
   })
     .then(data => res.json(data))
@@ -33,16 +33,16 @@ router.get('/:id', (req, res) => {
     where: {
       id: req.params.id
     },
-    attributes: ['id', 'product_name', 'price', 'stock', 'category_id'],
+    attributes: ['id', 'product_name', 'price', 'stock', 'category_id', 'tag_id'],
     include: [
       {
         model: Category,
         attributes: ['category_name']
       },
-      // {
-      //   model: Tag,
-      //   attributes: ['tag_name']
-      // }
+      {
+        model: Tag,
+        attributes: ['tag_name']
+      }
     ]
   })
     .then(data => {
@@ -60,20 +60,6 @@ router.get('/:id', (req, res) => {
 
 // create new product
 router.post('/', (req, res) => {
-  Product.create({
-    product_name: req.body.product_name,
-    price: req.body.price,
-    stock: req.body.stock,
-    tagIds: req.body.tagIds
-  })
-    .then(data => res.json(data))
-    .catch(err => {
-      if (err) {
-        console.log(err);
-        res.status(500).json(err);
-      }
-    });
-  // ???
   Product.create(req.body)
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
@@ -84,6 +70,7 @@ router.post('/', (req, res) => {
             tag_id,
           };
         });
+        console.log(productTagIdArr);
         return ProductTag.bulkCreate(productTagIdArr);
       }
       // if no product tags, just respond
@@ -150,6 +137,7 @@ router.delete('/:id', (req, res) => {
         res.status(404).json({message: 'No matching product found to delete'})
         return;
       }
+      res.json(data);
     })
     .catch(err => {
       if (err) {
